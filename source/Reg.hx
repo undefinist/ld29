@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxPoint;
 import flixel.util.FlxSave;
 
 /**
@@ -9,29 +10,21 @@ import flixel.util.FlxSave;
  */
 class Reg
 {
-	/**
-	 * Generic levels Array that can be used for cross-state stuff.
-	 * Example usage: Storing the levels of a platformer.
-	 */
-	static public var levels:Array<Dynamic> = [];
-	/**
-	 * Generic level variable that can be used for cross-state stuff.
-	 * Example usage: Storing the current level number.
-	 */
-	static public var level:Int = 0;
-	/**
-	 * Generic scores Array that can be used for cross-state stuff.
-	 * Example usage: Storing the scores for level.
-	 */
-	static public var scores:Array<Dynamic> = [];
-	/**
-	 * Generic score variable that can be used for cross-state stuff.
-	 * Example usage: Storing the current score.
-	 */
-	static public var score:Int = 0;
-	/**
-	 * Generic bucket for storing different <code>FlxSaves</code>.
-	 * Especially useful for setting up multiple save slots.
-	 */
-	static public var saves:Array<FlxSave> = [];
+	
+	public static inline var CENTER_SIZE:Int = 128;
+	public static inline var SLOT_SIZE:Int = 64;
+	public static inline var NUM_OF_SLOTS:Int = 8;
+	public static inline var ENTER_DURATION:Float = 2.0;
+	
+	public static var SLOTS:Array<FlxPoint> = [
+		new FlxPoint(320 - 64, 		320 - 64 * 2),
+		new FlxPoint(320, 			320 - 64 * 2),
+		new FlxPoint(320 + 64,		320 - 64),
+		new FlxPoint(320 + 64,		320),
+		new FlxPoint(320,			320 + 64),
+		new FlxPoint(320 - 64,		320 + 64),
+		new FlxPoint(320 - 64 * 2,	320),
+		new FlxPoint(320 - 64 * 2,	320 - 64)
+	];
+	
 }
