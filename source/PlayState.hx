@@ -168,6 +168,7 @@ class PlayState extends FlxState
 			else if (direction < 0)
 				face.previousSlot();
 		}
+		FlxG.camera.shake(0.0125, 0.125);
 	}
 	
 	private function generatePattern():Void
