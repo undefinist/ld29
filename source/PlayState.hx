@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.plus.util.FlxRandomStack;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
@@ -19,6 +20,7 @@ class PlayState extends FlxState
 	
 	private var faces:Array<Face>;
 	private var enteringObjects:Array<EnteringObject>;
+	private var patternStack:FlxRandomStack<String>;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -39,7 +41,11 @@ class PlayState extends FlxState
 		}
 		
 		enteringObjects = new Array<EnteringObject>();
-		generatePattern();
+		
+		patternStack = new FlxRandomStack<String>(Reg.PATTERNS, true);
+		patternStack.insert(Reg.PATTERNS, true);
+		patternStack.insert(Reg.PATTERNS, true);
+		patternStack.shuffle();
 	}
 	
 	/**
@@ -100,7 +106,7 @@ class PlayState extends FlxState
 	
 	private function generatePattern():Void
 	{
-		var str:String = FlxRandom.getObject(Reg.PATTERNS);
+		var str:String = patternStack.next();
 		
 		var slot:Int = FlxRandom.intRanged(0, Reg.NUM_OF_SLOTS - 1);
 		var delay:Float = 0;
