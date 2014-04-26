@@ -1,16 +1,12 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.plus.util.FlxRandomStack;
 import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-import haxe.Log;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -21,6 +17,10 @@ class PlayState extends FlxState
 	private var faces:Array<Face>;
 	private var enteringObjects:Array<EnteringObject>;
 	private var patternStack:FlxRandomStack<String>;
+	
+	private var timeText:FlxText;
+	
+	private var timeElapsed:Float;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -46,6 +46,13 @@ class PlayState extends FlxState
 		patternStack.insert(Reg.PATTERNS, true);
 		patternStack.insert(Reg.PATTERNS, true);
 		patternStack.shuffle();
+		
+		timeText = new FlxText(0, 0, FlxG.width, "0.00", 16);
+		timeText.alignment = "center";
+		FlxSpriteUtil.screenCenter(timeText);
+		add(timeText);
+		
+		timeElapsed = 0;
 	}
 	
 	/**
@@ -56,14 +63,21 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		faces = null;
+		enteringObjects = null;
+		patternStack = null;
+		timeText = null;
 	}
 
 	/**
 	 * Function that is called once every frame.
 	 */
 	override public function update():Void
-	{
+	{	
 		super.update();
+		
+		timeElapsed += FlxG.elapsed;
+		var timeParts = Std.string(timeElapsed).split(".");
+		timeText.text = timeParts[0] + "." + timeParts[1].substr(0, 2);
 		
 		if (FlxG.keys.anyJustPressed(["A", "LEFT"]))
 			rotateFaces(-1);
