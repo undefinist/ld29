@@ -1,0 +1,24 @@
+﻿Beneath the Surface
+
+A game about pretending to be happy
+
+RHYTHM GAME WITH MULTIPLE FACES, WHERE SADNESS IS THE BEAT
+
+more of twitch actually
+
+super hexagon inspired; a square with 4 alternating faces
+
+ @
+ ..@
+@..
+  @
+  
+@ = face
+. = square
+
+sad/happy faces journey in from 8 sides
+each 4 faces will have varying happiness
+there will come times where it is impossible to dodge sadness
+this means it is important to resource-manage the happy faces
+
+Underneath Our Faces: An arcade action game about pretending to be happy
