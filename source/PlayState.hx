@@ -7,6 +7,9 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+import flixel.util.FlxTimer;
+import haxe.Log;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -34,8 +37,7 @@ class PlayState extends FlxState
 		}
 		
 		enteringObjects = new Array<EnteringObject>();
-		enteringObjects.push(new Happiness(0, this));
-		add(enteringObjects[0]);
+		generatePattern("-.-.-.-." + ".-.-.-.-" + ".-...-.-" + "-...-.-.");
 	}
 	
 	/**
@@ -60,8 +62,10 @@ class PlayState extends FlxState
 		else if (FlxG.keys.anyJustPressed(["D", "RIGHT"]))
 			rotateFaces(1);
 			
-		for (obj in enteringObjects)
+		var i:Int = 0;
+		while (i < enteringObjects.length)
 		{
+			var obj:EnteringObject = enteringObjects[i];
 			if (obj.justLanded)
 			{
 				for (face in faces)
@@ -69,10 +73,13 @@ class PlayState extends FlxState
 					if (obj.slot == face.slot)
 					{
 						obj.onHitFace(face);
+						enteringObjects.remove(obj);
+						i--;
 						break;
 					}
 				}
 			}
+			i++;
 		}
 	}
 	
@@ -84,6 +91,61 @@ class PlayState extends FlxState
 				face.nextSlot();
 			else if (direction < 0)
 				face.previousSlot();
+		}
+	}
+	
+	private function generatePattern(str:String):Void
+	{
+		var slot:Int = FlxRandom.intRanged(0, Reg.NUM_OF_SLOTS - 1);
+		var delay:Float = 0;
+		
+		var patterns:Array<String> = new Array<String>();
+		for (i in 0...str.length)
+		{
+			if (i % Reg.NUM_OF_SLOTS == 0)
+			{
+				patterns.push("");
+			}
+			patterns[patterns.length - 1] += str.charAt(i);
+		}
+		
+		for (pattern in patterns)
+		{
+			if (delay > 0)
+			{
+				FlxTimer.start(delay, function(_):Void {
+					generateSinglePattern(slot, pattern);
+				} );
+			}
+			else
+				generateSinglePattern(slot, pattern);
+				
+			delay += Reg.ENTER_DELAY;
+		}
+	}
+	
+	private function generateSinglePattern(beginSlot:Int, pattern:String)
+	{
+		var index:Int = 0;
+		var slot:Int = beginSlot;
+		
+		while (index < pattern.length)
+		{
+			if (pattern.charAt(index) == "+")
+			{
+				var o:EnteringObject = new Happiness(slot, this);
+				add(o);
+				enteringObjects.push(o);
+			}
+			else if (pattern.charAt(index) == "-")
+			{
+				var o:EnteringObject = new Sadness(slot, this);
+				add(o);
+				enteringObjects.push(o);
+			}
+			
+			index++;
+			slot = (slot + 1) % Reg.NUM_OF_SLOTS;
 		}
 	}
 	

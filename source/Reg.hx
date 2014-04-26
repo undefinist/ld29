@@ -15,6 +15,7 @@ class Reg
 	public static inline var SLOT_SIZE:Int = 64;
 	public static inline var NUM_OF_SLOTS:Int = 8;
 	public static inline var ENTER_DURATION:Float = 2.0;
+	public static inline var ENTER_DELAY:Float = 0.5;
 	
 	public static var SLOTS:Array<FlxPoint> = [
 		new FlxPoint(320 - 64, 		320 - 64 * 2),
@@ -26,5 +27,6 @@ class Reg
 		new FlxPoint(320 - 64 * 2,	320),
 		new FlxPoint(320 - 64 * 2,	320 - 64)
 	];
+	
 	
 }
