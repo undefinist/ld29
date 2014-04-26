@@ -26,11 +26,16 @@
 	
 	<!--------------------------------PATHS SETTINGS-------------------------------->
 	
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" if="release" />
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets/sprites" rename="sprites" />
+	<assets path="assets/sprites" rename="sprites" exclude="*.ase" />
+	
+	<assets path="assets/audio" rename="audio">
+		<music path="legs-of-a-bird.wav" id="BGM" />
+	</assets>
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 	

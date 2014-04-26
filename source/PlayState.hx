@@ -26,6 +26,8 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+		if (FlxG.sound.music == null)
+			FlxG.sound.playMusic("BGM");
 		
 		FlxG.camera.bgColor = 0xff5555ff;
 		
