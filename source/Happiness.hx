@@ -13,7 +13,7 @@ class Happiness extends EnteringObject
 	{
 		super(slot, parent);
 		loadGraphic("sprites/faces.png", true);
-		animation.frameIndex = 0;
+		animation.frameIndex = 1;
 	}
 	
 	override public function onHitFace(face:Face):Void 

@@ -19,6 +19,12 @@ class Face extends FlxSprite
 	
 	private var tween:FlxTween;
 	
+	public var isCrying(get, never):Bool;
+	private function get_isCrying():Bool
+	{
+		return animation.frameIndex == CRY_INDEX;
+	}
+	
 	public var slot:Int; // which of the 8 slots this face is in
 	
 	public function new(slot:Int) 

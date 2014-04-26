@@ -13,7 +13,7 @@ class Sadness extends EnteringObject
 	{
 		super(slot, parent);
 		loadGraphic("sprites/faces.png", true);
-		animation.frameIndex = 4;
+		animation.frameIndex = 3;
 		color = 0xff000000;
 	}
 	

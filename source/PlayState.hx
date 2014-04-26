@@ -2,8 +2,10 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.plus.FlxPlus;
 import flixel.plus.util.FlxRandomStack;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
@@ -19,8 +21,11 @@ class PlayState extends FlxState
 	private var patternStack:FlxRandomStack<String>;
 	
 	private var timeText:FlxText;
+	private var highscoreText:FlxText;
 	
 	private var timeElapsed:Float;
+	private var highscore:Float;
+	private var isGameOver:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -52,7 +57,14 @@ class PlayState extends FlxState
 		FlxSpriteUtil.screenCenter(timeText);
 		add(timeText);
 		
+		highscore = FlxG.save.data.highscore;
+		highscoreText = new FlxText(0, Reg.SLOTS[4].y - 20, FlxG.width,
+			"BEST: " + FlxPlus.floatToString(highscore, 2), 16);
+		highscoreText.alignment = "center";
+		add(highscoreText);
+		
 		timeElapsed = 0;
+		isGameOver = false;
 	}
 	
 	/**
@@ -66,6 +78,7 @@ class PlayState extends FlxState
 		enteringObjects = null;
 		patternStack = null;
 		timeText = null;
+		highscoreText = null;
 	}
 
 	/**
@@ -75,9 +88,15 @@ class PlayState extends FlxState
 	{	
 		super.update();
 		
+		if (isGameOver)
+		{
+			if (FlxG.keys.anyJustPressed(["A", "LEFT", "D", "RIGHT"]))
+				FlxG.resetState();
+			return;
+		}
+		
 		timeElapsed += FlxG.elapsed;
-		var timeParts = Std.string(timeElapsed).split(".");
-		timeText.text = timeParts[0] + "." + timeParts[1].substr(0, 2);
+		timeText.text = FlxPlus.floatToString(timeElapsed, 2);
 		
 		if (FlxG.keys.anyJustPressed(["A", "LEFT"]))
 			rotateFaces(-1);
@@ -103,8 +122,41 @@ class PlayState extends FlxState
 			}
 			i++;
 		}
+			
+		for (face in faces)
+		{
+			if (face.isCrying)
+			{
+				gameOver();
+				return;
+			}
+		}
+		
 		if (enteringObjects.length == 0)
 			generatePattern();
+	}
+	
+	private function gameOver():Void
+	{
+		isGameOver = true;
+		if (timeElapsed > highscore)
+		{
+			highscore = timeElapsed;
+			highscoreText.text =
+				"BEST: " + FlxPlus.floatToString(highscore, 2);
+			FlxG.save.data.highscore = highscore;
+			FlxG.save.flush();
+		}
+		
+		var txt:FlxText = new FlxText(
+			0, Reg.SLOTS[0].y + Reg.SLOT_SIZE + 4,
+			FlxG.width, "GAME OVER", 16);
+		txt.alignment = "center";
+		add(txt);
+		for (obj in enteringObjects)
+		{
+			FlxTween.singleVar(obj, "alpha", 0, Reg.ENTER_DELAY / 2);
+		}
 	}
 	
 	private function rotateFaces(direction:Int):Void
