@@ -39,7 +39,7 @@ class PlayState extends FlxState
 		}
 		
 		enteringObjects = new Array<EnteringObject>();
-		generatePattern("-.-.-.-." + ".-.-.-.-" + ".-...-.-" + "-...-.-.");
+		generatePattern();
 	}
 	
 	/**
@@ -75,14 +75,16 @@ class PlayState extends FlxState
 					if (obj.slot == face.slot)
 					{
 						obj.onHitFace(face);
-						enteringObjects.remove(obj);
-						i--;
 						break;
 					}
 				}
+				enteringObjects.remove(obj);
+				i--;
 			}
 			i++;
 		}
+		if (enteringObjects.length == 0)
+			generatePattern();
 	}
 	
 	private function rotateFaces(direction:Int):Void
@@ -96,8 +98,10 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function generatePattern(str:String):Void
+	private function generatePattern():Void
 	{
+		var str:String = FlxRandom.getObject(Reg.PATTERNS);
+		
 		var slot:Int = FlxRandom.intRanged(0, Reg.NUM_OF_SLOTS - 1);
 		var delay:Float = 0;
 		

@@ -14,7 +14,7 @@ class Reg
 	public static inline var CENTER_SIZE:Int = 128;
 	public static inline var SLOT_SIZE:Int = 64;
 	public static inline var NUM_OF_SLOTS:Int = 8;
-	public static inline var ENTER_DURATION:Float = 2.0;
+	public static inline var ENTER_DURATION:Float = 1.0;
 	public static inline var ENTER_DELAY:Float = 0.5;
 	
 	public static var SLOTS:Array<FlxPoint> = [
@@ -28,5 +28,14 @@ class Reg
 		new FlxPoint(320 - 64 * 2,	320 - 64)
 	];
 	
+	public static var PATTERNS:Array<String> = [
+		"-.-.-.-." + ".-.-.-.-" + "-.-.-.-." + ".-.-.-.-",
+		"-.-.-.-." + "-.-.-.-." + ".-.-.-.-" + ".-.-.-.-",
+		"-...-..." + "-...-...",
+		"-...-..." + ".-...-..",
+		"--......" + "...+....",
+		"+-......" + "-+......",
+		"+..-.-.."
+	];
 	
 }
