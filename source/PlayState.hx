@@ -17,6 +17,11 @@ import flixel.util.FlxTimer;
 class PlayState extends FlxState
 {
 	
+	private static inline var MIN_SPIN_SPEED:Float = 0.75;
+	private static inline var MAX_SPIN_SPEED:Float = 1.25;
+	private static inline var MIN_SPIN_DURATION:Float = 3.0;
+	private static inline var MAX_SPIN_DURATION:Float = 15.0;
+	
 	private var faces:Array<Face>;
 	private var enteringObjects:Array<EnteringObject>;
 	private var patternStack:FlxRandomStack<String>;
@@ -28,6 +33,11 @@ class PlayState extends FlxState
 	private var highscore:Float;
 	private var isGameOver:Bool;
 	private var isPulsing:Bool;
+	
+	private var spinDirection:Int;
+	private var spinSpeed:Float;
+	private var spinDuration:Float;
+	private var spinTimeElapsed:Float;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -63,19 +73,26 @@ class PlayState extends FlxState
 		patternStack.shuffle();
 		
 		timeText = new FlxText(0, 0, FlxG.width, "0.00", 16);
+		timeText.setBorderStyle(FlxText.BORDER_OUTLINE);
 		timeText.alignment = "center";
 		FlxSpriteUtil.screenCenter(timeText);
 		add(timeText);
 		
 		highscore = FlxG.save.data.highscore;
 		highscoreText = new FlxText(0, Reg.SLOTS[4].y - 20, FlxG.width,
-			"BEST: " + FlxPlus.floatToString(highscore, 2), 16);
+			"BEST: " + FlxPlus.floatToString(highscore, 2), 12);
 		highscoreText.alignment = "center";
 		add(highscoreText);
 		
 		timeElapsed = 0;
 		isGameOver = false;
 		isPulsing = false;
+		
+		spinDirection = FlxRandom.sign();
+		spinSpeed = FlxRandom.floatRanged(MIN_SPIN_SPEED, MAX_SPIN_SPEED);
+		spinDuration =
+			FlxRandom.floatRanged(MIN_SPIN_DURATION, MAX_SPIN_DURATION);
+		spinTimeElapsed = 0;
 	}
 	
 	/**
@@ -99,13 +116,26 @@ class PlayState extends FlxState
 	{	
 		super.update();
 		
-		FlxG.camera.angle += 1;
+		spinTimeElapsed += FlxG.elapsed;
+		if (spinTimeElapsed > spinDuration)
+		{
+			spinDirection *= -1;
+			spinSpeed = FlxRandom.floatRanged(MIN_SPIN_SPEED, MAX_SPIN_SPEED);
+			spinDuration =
+				FlxRandom.floatRanged(MIN_SPIN_DURATION, MAX_SPIN_DURATION);
+			spinTimeElapsed = 0;
+		}
+		
+		FlxG.camera.angle += spinSpeed * spinDirection;
 		if (FlxG.camera.angle > 360.0)
 			FlxG.camera.angle -= 360.0;
+		if (FlxG.camera.angle < 0)
+			FlxG.camera.angle += 360.0;
 		for(face in faces)
 			face.angle = -FlxG.camera.angle;
 		for (obj in enteringObjects)
 			obj.angle = -FlxG.camera.angle;
+		timeText.angle = -FlxG.camera.angle;
 			
 		if (FlxG.camera.flashSprite.scaleX == 1.0 && !isPulsing)
 		{
@@ -125,8 +155,13 @@ class PlayState extends FlxState
 		
 		if (isGameOver)
 		{
-			if (FlxG.keys.anyJustPressed(["A", "LEFT", "D", "RIGHT"]))
-				FlxG.resetState();
+			if (timeElapsed < 1.0)
+				timeElapsed += FlxG.elapsed;
+			else
+			{
+				if (FlxG.keys.anyJustPressed(["A", "LEFT", "D", "RIGHT"]))
+					FlxG.resetState();
+			}
 			return;
 		}
 		
@@ -178,7 +213,6 @@ class PlayState extends FlxState
 	
 	private function gameOver():Void
 	{
-		isGameOver = true;
 		if (timeElapsed > highscore)
 		{
 			highscore = timeElapsed;
@@ -189,14 +223,17 @@ class PlayState extends FlxState
 		}
 		
 		var txt:FlxText = new FlxText(
-			0, Reg.SLOTS[0].y + Reg.SLOT_SIZE + 4,
-			FlxG.width, "GAME OVER", 16);
+			0, Reg.SLOTS[0].y + Reg.SLOT_SIZE,
+			FlxG.width, "IT HURTS", 12);
 		txt.alignment = "center";
+		txt.angle = 180.0;
 		add(txt);
+		
 		for (obj in enteringObjects)
-		{
 			FlxTween.singleVar(obj, "alpha", 0, Reg.ENTER_DELAY / 2);
-		}
+		
+		isGameOver = true;
+		timeElapsed = 0;
 	}
 	
 	private function rotateFaces(direction:Int):Void
