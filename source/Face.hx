@@ -32,6 +32,7 @@ class Face extends FlxSprite
 		super(Reg.SLOTS[slot].x, Reg.SLOTS[slot].y);
 		loadGraphic("sprites/faces.png", true);
 		animation.frameIndex = POKER_INDEX;
+		antialiasing = true;
 		
 		this.slot = slot;
 	}

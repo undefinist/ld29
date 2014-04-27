@@ -22,6 +22,7 @@ class EnteringObject extends FlxSprite
 	public function new(slot:Int, parent:FlxGroup) 
 	{
 		super(Reg.SLOTS[slot].x, Reg.SLOTS[slot].y);
+		antialiasing = true;
 		
 		justLanded = false;
 		landed = false;

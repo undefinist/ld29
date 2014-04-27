@@ -6,6 +6,7 @@ import flixel.plus.FlxPlus;
 import flixel.plus.util.FlxRandomStack;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
@@ -36,7 +37,14 @@ class PlayState extends FlxState
 		if (FlxG.sound.music == null)
 			FlxG.sound.playMusic("BGM");
 		
-		FlxG.camera.bgColor = 0xff5555ff;
+		FlxG.camera.width = FlxG.width * 3;
+		FlxG.camera.height = FlxG.height * 3;
+		FlxG.camera.x -= FlxG.width;
+		FlxG.camera.y -= FlxG.height;
+		FlxG.camera.antialiasing = true;
+		FlxG.camera.focusOn(new FlxPoint(FlxG.width / 2, FlxG.height / 2));
+		
+		add(new Background());
 		
 		faces = new Array<Face>();
 		for (i in 0...4)
@@ -88,6 +96,14 @@ class PlayState extends FlxState
 	{	
 		super.update();
 		
+		FlxG.camera.angle += 1;
+		if (FlxG.camera.angle > 360.0)
+			FlxG.camera.angle -= 360.0;
+		for(face in faces)
+			face.angle = -FlxG.camera.angle;
+		for (obj in enteringObjects)
+			obj.angle = -FlxG.camera.angle;
+		
 		if (isGameOver)
 		{
 			if (FlxG.keys.anyJustPressed(["A", "LEFT", "D", "RIGHT"]))
@@ -102,7 +118,8 @@ class PlayState extends FlxState
 			rotateFaces(-1);
 		else if (FlxG.keys.anyJustPressed(["D", "RIGHT"]))
 			rotateFaces(1);
-			
+		
+		var shake:Bool = false;
 		var i:Int = 0;
 		while (i < enteringObjects.length)
 		{
@@ -118,10 +135,14 @@ class PlayState extends FlxState
 					}
 				}
 				enteringObjects.remove(obj);
+				shake = true;
 				i--;
 			}
 			i++;
 		}
+		
+		if (shake)			
+			FlxG.camera.shake(0.0125, 0.125);
 			
 		for (face in faces)
 		{
@@ -168,7 +189,6 @@ class PlayState extends FlxState
 			else if (direction < 0)
 				face.previousSlot();
 		}
-		FlxG.camera.shake(0.0125, 0.125);
 	}
 	
 	private function generatePattern():Void
