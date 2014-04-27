@@ -28,12 +28,14 @@
 	
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" if="release" />
+	
 	<classpath name="source" />
+	<classpath name="source/states" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
 	<assets path="assets/sprites" rename="sprites" exclude="*.ase" />
 	
-	<assets path="assets/audio" rename="audio">
+	<assets path="assets/audio" rename="audio" exclude="*.it">
 		<music path="legs-of-a-bird.wav" id="BGM" />
 	</assets>
 	

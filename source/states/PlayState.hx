@@ -153,6 +153,9 @@ class PlayState extends FlxState
 			} );
 		}
 		
+		if (FlxG.keys.anyJustPressed(["BACKSPACE", "ESCAPE"]))
+			FlxG.switchState(new MenuState());
+		
 		if (isGameOver)
 		{
 			if (timeElapsed < 1.0)
@@ -207,7 +210,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		if (enteringObjects.length == 0)
+		if (enteringObjects.length == 0 && timeElapsed > 2.0)
 			generatePattern();
 	}
 	
