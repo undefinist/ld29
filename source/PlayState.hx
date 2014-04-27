@@ -27,6 +27,7 @@ class PlayState extends FlxState
 	private var timeElapsed:Float;
 	private var highscore:Float;
 	private var isGameOver:Bool;
+	private var isPulsing:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -76,6 +77,7 @@ class PlayState extends FlxState
 		
 		timeElapsed = 0;
 		isGameOver = false;
+		isPulsing = false;
 	}
 	
 	/**
@@ -106,6 +108,22 @@ class PlayState extends FlxState
 			face.angle = -FlxG.camera.angle;
 		for (obj in enteringObjects)
 			obj.angle = -FlxG.camera.angle;
+			
+		if (FlxG.camera.flashSprite.scaleX == 1.0 && !isPulsing)
+		{
+			isPulsing = true;
+			FlxTimer.start(0.1, function(_):Void {
+				FlxG.camera.flashSprite.scaleX = 1.1;
+				FlxG.camera.flashSprite.scaleY = 1.1;
+				FlxTween.multiVar(FlxG.camera.flashSprite,
+					{ scaleX: 1.0, scaleY: 1.0 }, 0.1,
+					{ type: FlxTween.ONESHOT, complete: function(_):Void {
+						FlxG.camera.flashSprite.scaleX = 1.0;
+						FlxG.camera.flashSprite.scaleY = 1.0;
+						isPulsing = false;
+					} } );
+			} );
+		}
 		
 		if (isGameOver)
 		{
