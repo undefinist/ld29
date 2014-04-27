@@ -34,6 +34,9 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+		
+		ColorScheme.randomize();
+		
 		if (FlxG.sound.music == null)
 			FlxG.sound.playMusic("BGM");
 		
@@ -84,7 +87,7 @@ class PlayState extends FlxState
 		super.destroy();
 		faces = null;
 		enteringObjects = null;
-		patternStack = null;
+		patternStack = FlxG.safeDestroy(patternStack);
 		timeText = null;
 		highscoreText = null;
 	}
