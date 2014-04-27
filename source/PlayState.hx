@@ -60,8 +60,6 @@ class PlayState extends FlxState
 		enteringObjects = new Array<EnteringObject>();
 		
 		patternStack = new FlxRandomStack<String>(Reg.PATTERNS, true);
-		patternStack.insert(Reg.PATTERNS, true);
-		patternStack.insert(Reg.PATTERNS, true);
 		patternStack.shuffle();
 		
 		timeText = new FlxText(0, 0, FlxG.width, "0.00", 16);
