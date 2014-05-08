@@ -6,10 +6,10 @@ import flixel.plus.FlxPlus;
 import flixel.plus.util.FlxRandomStack;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxTimer;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -104,7 +104,7 @@ class PlayState extends FlxState
 		super.destroy();
 		faces = null;
 		enteringObjects = null;
-		patternStack = FlxG.safeDestroy(patternStack);
+		patternStack = FlxDestroyUtil.destroy(patternStack);
 		timeText = null;
 		highscoreText = null;
 	}
@@ -140,10 +140,10 @@ class PlayState extends FlxState
 		if (FlxG.camera.flashSprite.scaleX == 1.0 && !isPulsing)
 		{
 			isPulsing = true;
-			FlxTimer.start(0.1, function(_):Void {
+			FlxPlus.delay(0.1, function(_):Void {
 				FlxG.camera.flashSprite.scaleX = 1.1;
 				FlxG.camera.flashSprite.scaleY = 1.1;
-				FlxTween.multiVar(FlxG.camera.flashSprite,
+				FlxTween.tween(FlxG.camera.flashSprite,
 					{ scaleX: 1.0, scaleY: 1.0 }, 0.1,
 					{ type: FlxTween.ONESHOT, complete: function(_):Void {
 						FlxG.camera.flashSprite.scaleX = 1.0;
@@ -233,7 +233,7 @@ class PlayState extends FlxState
 		add(txt);
 		
 		for (obj in enteringObjects)
-			FlxTween.singleVar(obj, "alpha", 0, Reg.ENTER_DELAY / 2);
+			FlxTween.tween(obj, { alpha: 0 }, Reg.ENTER_DELAY / 2);
 		
 		isGameOver = true;
 		timeElapsed = 0;
@@ -271,7 +271,7 @@ class PlayState extends FlxState
 		{
 			if (delay > 0)
 			{
-				FlxTimer.start(delay, function(_):Void {
+				FlxPlus.delay(delay, function(_):Void {
 					generateSinglePattern(slot, pattern);
 				} );
 			}

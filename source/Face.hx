@@ -71,14 +71,15 @@ class Face extends FlxSprite
 		moveTo(slot);
 	}
 	
+	@:access(flixel.tweens.FlxTween.finish)
 	private function moveTo(slot:Int):Void
 	{
 		if (tween != null)
 		{
-			if(!tween.finished)
+			if (!tween.finished)
 				tween.finish();
 		}
-		tween = FlxTween.multiVar(this,
+		tween = FlxTween.tween(this,
 			{ x: Reg.SLOTS[slot].x, y: Reg.SLOTS[slot].y }, 0.1,
 			{ type: FlxTween.ONESHOT, ease: FlxEase.cubeOut } );
 	}

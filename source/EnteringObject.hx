@@ -40,7 +40,7 @@ class EnteringObject extends FlxSprite
 				x = -Reg.SLOT_SIZE;
 		}
 		
-		FlxTween.multiVar(this,
+		FlxTween.tween(this,
 			{ x: Reg.SLOTS[slot].x, y: Reg.SLOTS[slot].y }, Reg.ENTER_DURATION,
 			{ type: FlxTween.ONESHOT, complete: onLand } );
 	}
@@ -63,7 +63,7 @@ class EnteringObject extends FlxSprite
 	private function onLand(tween:FlxTween):Void
 	{
 		justLanded = true;
-		FlxTween.singleVar(this, "alpha", 0, 0.25,
+		FlxTween.tween(this, { alpha: 0 }, 0.25,
 			{ type: FlxTween.ONESHOT, complete: onFadeOut } );
 	}
 	
